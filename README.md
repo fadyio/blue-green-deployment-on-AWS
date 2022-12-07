@@ -9,7 +9,7 @@ In this project, you will prove your mastery of the following learning objective
 - Surface critical server errors for diagnosis using centralized structured logging.
 
 ## CI/CD Pipeline Diagram
-![pipeline diagrams.](pipeline.png)
+![pipeline diagrams.](udapeople-pipeline.png)
 ___
 ### Project specifications
 
