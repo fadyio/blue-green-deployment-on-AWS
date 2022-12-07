@@ -1,5 +1,5 @@
 # docker-compose.yml
-version: ""
+version: "3"
 services:
   database:
     image: "postgres"
