@@ -187,26 +187,26 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environments:
           when: on_fail
-    run-migrations:
-      docker:
-        - image: cimg/node:13.8.0
-      steps:
-        - checkout
-        - install_aws_cli
-        - run:
-            name: Run migrations
-            command: "cd backend\nnpm install\nnpm run migrations > migrations_dump.txt\n \n"
-        - run:
-            name: Send migration results to memstash
-            command: |
-              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-              then
-              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-              fi
-        - destroy-environments:
-            id: ${CIRCLE_WORKFLOW_ID:0:7}
-            when: on_fail
-        - revert-migrations
+  run-migrations:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - checkout
+      - install_aws_cli
+      - run:
+          name: Run migrations
+          command: "cd backend\nnpm install\nnpm run migrations > migrations_dump.txt\n \n"
+      - run:
+          name: Send migration results to memstash
+          command: |
+            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            then
+            curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+            fi
+      - destroy-environments:
+          id: ${CIRCLE_WORKFLOW_ID:0:7}
+          when: on_fail
+      - revert-migrations
 #   deploy-frontend:
 #     docker:
 #     # Docker image here that supports AWS CLI
