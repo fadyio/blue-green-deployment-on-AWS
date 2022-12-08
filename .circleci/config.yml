@@ -172,24 +172,25 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-environment
-      #         # Here's where you will add some code to rollback on failure      
-      # run-migrations:
-      #   docker:
-      #   # Docker image here that supports NodeJS
-      #   steps:
-      #     # Checkout code from git
-      #     - run:
-      #         name: Run migrations
-      #         command: |
-      #           # Your code here
-      #           exit 1
-      #     - run:
-      #         name: Send migration results to memstash
-      #         command: |
-      #           # Your code here
-      #           exit 1
-      # Here's where you will add some code to rollback on failure      
+      - destroy-environments:
+          when: on_fail
+          #         # Here's where you will add some code to rollback on failure      
+          # run-migrations:
+          #   docker:
+          #   # Docker image here that supports NodeJS
+          #   steps:
+          #     # Checkout code from git
+          #     - run:
+          #         name: Run migrations
+          #         command: |
+          #           # Your code here
+          #           exit 1
+          #     - run:
+          #         name: Send migration results to memstash
+          #         command: |
+          #           # Your code here
+          #           exit 1
+          # Here's where you will add some code to rollback on failure      
 #   deploy-frontend:
 #     docker:
 #     # Docker image here that supports AWS CLI
