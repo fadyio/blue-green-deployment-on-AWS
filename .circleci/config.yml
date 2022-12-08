@@ -40,14 +40,15 @@ commands:
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
     parameters:
-      workflow_ID:
+      when:
         type: string
+        default: on_fail
     steps:
       - run:
           name: Revert migrations
-          when: on_fail
+          when: <<parameters.when>>
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_ << parameters.Workflow_ID >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_ << parameters.when>>)
             if (( $SUCCESS == 1 ));
               then
               cd ~/project/backend
