@@ -26,7 +26,7 @@ ___
   | Specifications | Proof | Meets specification |
   |---|---|---|
   | Job failed because of compile errors. | [SCREENSHOT01](Screenshots/SCREENSHOT01.png) | ✓ |
-  | Job failed because of unit tests. | [SCREENSHOT02](Screenshots/SCREENSHOT02.png) |  |
+  | Job failed because of unit tests. | [SCREENSHOT02](Screenshots/SCREENSHOT02.png) | ✓ |
   | Job that failed because of vulnerable packages. | [SCREENSHOT03](Screenshot/SCREENSHOT03.png) |  |
   | An alert from one of your failed builds. | [SCREENSHOT04](Screenshots/SCREENSHOT04.png) |  |
   | Appropriate job failure for infrastructure creation. | [SCREENSHOT05](Screenshots/SCREENSHOT05.png) |  |
