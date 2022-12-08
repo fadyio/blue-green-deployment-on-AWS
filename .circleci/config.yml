@@ -30,21 +30,30 @@ commands:
         type: string
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
+      - install_aws_cli
       - run:
           name: Destroy environments
           when: <<parameters.when>>
           command: |
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.id>> \
             & aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.id>>
-#   revert-migrations:
-#     description: Revert the last migration if successfully run in the current workflow.
-#     parameters:
-#     # Add parameter here     
-#     steps:
-#       - run:
-#           name: Revert migrations
-#           # Add when this will run
-#           command: "# Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable\nSUCCESS = 1\nif(( $SUCCESS==1 )); \nthen\n#  cd ~/project/backend\n#  npm install\n#  Add revert code here. You can find this in the Getting Started section.\n  exit 1\nfi\n"
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      workflow_ID:
+        type: string
+    steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_ << parameters.Workflow_ID >>)
+            if (( $SUCCESS == 1 ));
+              then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
 jobs:
   build-frontend:
     docker:
@@ -178,23 +187,26 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environments:
           when: on_fail
-          #         # Here's where you will add some code to rollback on failure      
-          # run-migrations:
-          #   docker:
-          #   # Docker image here that supports NodeJS
-          #   steps:
-          #     # Checkout code from git
-          #     - run:
-          #         name: Run migrations
-          #         command: |
-          #           # Your code here
-          #           exit 1
-          #     - run:
-          #         name: Send migration results to memstash
-          #         command: |
-          #           # Your code here
-          #           exit 1
-          # Here's where you will add some code to rollback on failure      
+    run-migrations:
+      docker:
+        - image: cimg/node:13.8.0
+      steps:
+        - checkout
+        - install_aws_cli
+        - run:
+            name: Run migrations
+            command: "cd backend\nnpm install\nnpm run migrations > migrations_dump.txt\n \n"
+        - run:
+            name: Send migration results to memstash
+            command: |
+              if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+              then
+              curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              fi
+        - destroy-environments:
+            id: ${CIRCLE_WORKFLOW_ID:0:7}
+            when: on_fail
+        - revert-migrations
 #   deploy-frontend:
 #     docker:
 #     # Docker image here that supports AWS CLI
