@@ -25,7 +25,7 @@ ___
 - Your screenshots in JPG or PNG format, named using the screenshot number listed in the instructions.
   | Specifications | Proof | Meets specification |
   |---|---|---|
-  | Job failed because of compile errors. | [SCREENSHOT01](Screenshots/SCREENSHOT01.png) |  |
+  | Job failed because of compile errors. | [SCREENSHOT01](Screenshots/SCREENSHOT01.png) | ✓ |
   | Job failed because of unit tests. | [SCREENSHOT02](Screenshots/SCREENSHOT02.png) |  |
   | Job that failed because of vulnerable packages. | [SCREENSHOT03](Screenshot/SCREENSHOT03.png) |  |
   | An alert from one of your failed builds. | [SCREENSHOT04](Screenshots/SCREENSHOT04.png) |  |
