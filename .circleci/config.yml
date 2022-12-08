@@ -25,7 +25,7 @@ commands:
     parameters:
       Workflow_ID:
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0.7}
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Destroy environments
@@ -154,7 +154,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environment:
+      - destroy-environment
         # Here's where you will add some code to rollback on failure      
         # configure-infrastructure:
         #   docker:
