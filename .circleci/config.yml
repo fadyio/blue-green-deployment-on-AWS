@@ -85,7 +85,7 @@ jobs:
           keys: [frontend-dependency]
       - run:
           name: frontend scan
-          command: "cd frontend\nnpm install \nnpm audit --audit-level=critical\n"
+          command: "cd frontend \nnpm install \nnpm audit fix --force --audit-level=critical\nnpm audit --audit-level=critical\n"
   scan-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -95,7 +95,7 @@ jobs:
           keys: [backend-dependency]
       - run:
           name: backend scan
-          command: "cd backend\nnpm install \nnpm audit --audit-level=critical\n"
+          command: "cd backend\nnpm install \nnpm audit fix --force --audit-level=critical\nnpm audit fix --force --audit-level=critical\nnpm audit --audit-level=critical\n"
 #   deploy-infrastructure:
 #     docker:
 #     # Docker image here that supports AWS CLI
