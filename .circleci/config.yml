@@ -194,16 +194,15 @@ jobs:
       - install_aws_cli
       - run:
           name: Run migrations
-          working_directory: ./backend
           command: |
+            cd backend
             npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
           name: Send migration results to kvdb
-          working_directory: ./backend
           command: |
-            if grep -q "has been executed successfully."  migrations_dump.txt
+            if grep -q "has been executed successfully."  ~/project/backend/migrations_dump.txt
             then
             curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
