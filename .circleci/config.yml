@@ -200,6 +200,7 @@ jobs:
             npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
+          working_directory: ./backend
           command: |
             if grep -q "has been executed successfully."  migrations_dump.txt
             then
