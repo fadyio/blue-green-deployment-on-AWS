@@ -48,7 +48,7 @@ commands:
           when: on_fail
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.id>>)
+            SUCCESS=$(curl --insecure https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_<<parameters.id>>)
             if (( $SUCCESS == 1 ));
               then
               npm install
@@ -204,7 +204,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully."  ~/project/backend/migrations_dump.txt
             then
-            curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            curl https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       - destroy-environments
       - revert-migrations
