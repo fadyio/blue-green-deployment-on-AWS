@@ -51,7 +51,6 @@ commands:
             SUCCESS=$(curl --insecure https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_<<parameters.id>>)
             if (( $SUCCESS == 1 ));
               then
-              npm install
               npm run migrations:revert
             fi
 jobs:
@@ -196,9 +195,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
-            npm run migrations | tee migrations_dump.txt || \
-            (cat /home/circleci/.npm/_logs/*.log && exit 3)
+            npm run migrations > migrations_dump.txt
       - run:
           name: Send migration results to kvdb
           command: |
