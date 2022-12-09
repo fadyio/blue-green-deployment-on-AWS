@@ -165,8 +165,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environments:
-          when: on_fail
+      - destroy-environments
   configure-infrastructure:
     docker:
       - image: cimg/base:stable
@@ -184,8 +183,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-environments:
-          when: on_fail
+      - destroy-environments
   run-migrations:
     docker:
       - image: cimg/node:13.8.0
