@@ -204,8 +204,11 @@ jobs:
             if grep -q "has been executed successfully."  ~/project/backend/migrations_dump.txt
             then
             curl --insecure https://kvdb.io/ViWzkdySLpmD9TMMzU5Fzq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            else 
+            echo "not go man"
             fi
       - destroy-environments
+      - revert-migrations
 #   deploy-frontend:
 #     docker:
 #     # Docker image here that supports AWS CLI
