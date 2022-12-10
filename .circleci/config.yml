@@ -60,7 +60,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-dependency]
+          keys: [frontend-build]
       - run:
           name: Build front-end
           command: |
@@ -69,27 +69,30 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-dependency
+          key: frontend-build
   build-backend:
     docker:
       - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-dependency]
+          keys: [backend-build]
       - run:
           name: Back-end build
-          command: "cd backend\nnpm install \nnpm run build\n"
+          command: |
+            cd backend
+            npm install
+            npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-dependency
+          key: backend-build
   test-frontend:
     docker:
       - image: cimg/node:13.8.0
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-dependency]
+          keys: [frontend-build]
       - run:
           name: frontend unit test
           command: |
@@ -102,7 +105,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-dependency]
+          keys: [backend-build]
       - run:
           name: Back-end unit test
           command: |
@@ -200,13 +203,7 @@ jobs:
             cat migrations_dump.txt
       - run:
           name: Send migration results to kvdb
-          command: |
-            if grep -q "has been executed successfully."  ~/project/backend/migrations_dump.txt
-            then
-            curl --insecure https://kvdb.io/ViWzkdySLpmD9TMMzU5Fzq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
-            else 
-            echo "not go man"
-            fi
+          command: "if grep -q \"has been executed successfully.\"  ~/project/backend/migrations_dump.txt\nthen\ncurl --insecure https://kvdb.io/ViWzkdySLpmD9TMMzU5Fzq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'\nelse \necho \"not go man\"\nfi\n"
       - destroy-environments
       - revert-migrations
 #   deploy-frontend:
