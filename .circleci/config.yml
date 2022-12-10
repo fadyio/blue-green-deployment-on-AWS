@@ -175,8 +175,7 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-      - destroy-environments:
-          when: on_fail
+      - destroy-environment
   configure-infrastructure:
     docker:
       - image: cimg/base:stable
@@ -211,7 +210,7 @@ jobs:
       - run:
           name: Send migration results to kvdb
           command: "if grep -q \"has been executed successfully.\"  ~/project/backend/migrations_dump.txt\nthen\ncurl --insecure https://kvdb.io/ViWzkdySLpmD9TMMzU5Fzq/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'\nelse \necho \"not go man\"\nfi\n"
-      - destroy-environments
+      - destroy-environment
       - revert-migrations
 #   deploy-frontend:
 #     docker:
