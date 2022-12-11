@@ -336,20 +336,30 @@ jobs:
             fi
       - destroy-environment
       - revert-migrations
-#   cloudfront-update:
-#     docker:
-#     # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Update cloudfront distribution
-#           command: |
-#             # your code here
-#     # Here's where you will add some code to rollback on failure  
+  cloudfront-update:
+    docker:
+      - image: cimg/python:3.10
+    steps:
+      - checkout
+      - install_nodejs
+      - install_aws_cli
+      - run:
+          name: Save the old workflow id to kvdb.io
+          command: |
+            export Old_Work_flowID=$(aws cloudformation\
+                    list-exports --query "Exports[?Name==\`WorkflowID\`].Value"\
+                    --no-paginate --output text)
+            echo "Old workflow id is: $Old_Work_flowID"
+            curl https://kvdb.io/${KVDB_BUCKET}/old_work_flow_id -d "${Old_Work_flowID}"
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --parameter-overrides Workflow_ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name udapeople-cloudfront
+      - destroy-environment
+      - revert-migrations
 # cleanup:
 #   docker:
 #   # Docker image here
