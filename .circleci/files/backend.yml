@@ -20,6 +20,10 @@ Resources:
           FromPort: 3030
           ToPort: 3030
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9100
+          ToPort: 9100
+          CidrIp: 0.0.0.0/0
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
@@ -27,7 +31,12 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: udacity
-      ImageId: ami-0a6b2839d44d781b2
+      ImageId: ami-0574da719dca65348
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+  InstanceEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref EC2Instance
