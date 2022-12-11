@@ -364,11 +364,11 @@ jobs:
       - run:
           name: Save the old workflow id to kvdb.io
           command: |
-            export Old_Work_flowID=$(aws cloudformation\
+            export OldWorkflowID=$(aws cloudformation\
                     list-exports --query "Exports[?Name==\`WorkflowID\`].Value"\
                     --no-paginate --output text)
-            echo "Old workflow id is: $Old_Work_flowID"
-            curl https://kvdb.io/${KVDB_BUCKET}/old_work_flow_id -d "${Old_Work_flowID}"
+            echo "Old workflow id is: $OldWorkflowID"
+            curl https://kvdb.io/${KVDB_BUCKET}/old_work_flow_id -d "${OldWorkflowID}"
       - run:
           name: Update cloudfront distribution
           command: |
