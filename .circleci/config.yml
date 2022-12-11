@@ -44,6 +44,21 @@ commands:
             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+  empty-s3:
+    description: Empty an S3 bucket to allow for its deletion.
+    parameters:
+      when:
+        type: string
+        default: on_fail
+      bucket-name:
+        type: string
+        default: udapeople-${CIRCLE_WORKFLOW_ID:0:7}
+    steps:
+      - run:
+          name: empty s3 bucket
+          when: on_fail
+          command: |
+            aws s3 rm "s3://<<parameters.bucket-name>>" --recursive
   revert-migrations:
     description: Revert the last migration, if any were executed during the current workflow
     parameters:
@@ -263,6 +278,7 @@ jobs:
             cd frontend
             npm run build
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - empty-s3
       - destroy-environment
       - revert-migrations
   deploy-backend:
@@ -301,6 +317,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
+      - empty-s3
       - destroy-environment
       - revert-migrations
   smoke-test:
@@ -334,6 +351,7 @@ jobs:
             else
               exit 1
             fi
+      - empty-s3
       - destroy-environment
       - revert-migrations
   cloudfront-update:
@@ -354,10 +372,12 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/cloudfront.yml \
-              --parameter-overrides Workflow_ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-              --stack-name udapeople-cloudfront
+            aws cloudformation deploy                                       \
+            --template-file .circleci/files/cloudfront.yml                \
+            --stack-name InitialStack                                     \
+            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"  \
+            --tags project=udapeople
+      - empty-s3
       - destroy-environment
       - revert-migrations
 # cleanup:
