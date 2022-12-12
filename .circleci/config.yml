@@ -263,7 +263,6 @@ jobs:
             cd frontend
             npm run build
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - empty-s3
       - destroy-environment
       - revert-migrations
   deploy-backend:
@@ -302,7 +301,6 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - empty-s3
       - destroy-environment
       - revert-migrations
   smoke-test:
@@ -336,7 +334,6 @@ jobs:
             else
               exit 1
             fi
-      - empty-s3
       - destroy-environment
       - revert-migrations
   cloudfront-update:
@@ -361,7 +358,6 @@ jobs:
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront           \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      - empty-s3
       - destroy-environment
       - revert-migrations
   cleanup:
