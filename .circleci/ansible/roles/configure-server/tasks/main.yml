@@ -1,10 +1,9 @@
 - name: "add node.js"
   become: true
   shell: |
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-    sudo apt-get install -y nodejs
-    sudo npm install -g n
-    sudo n 13.8.0
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    source ~/.bashrc
+    nvm install v13.8.0
 - name: "install pm2"
   npm:
     name: pm2
