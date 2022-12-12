@@ -44,21 +44,6 @@ commands:
             aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
-  empty-s3:
-    description: Empty an S3 bucket to allow for its deletion.
-    parameters:
-      when:
-        type: string
-        default: on_fail
-      bucket-name:
-        type: string
-        default: udapeople-${CIRCLE_WORKFLOW_ID:0:7}
-    steps:
-      - run:
-          name: empty s3 bucket
-          when: on_fail
-          command: |
-            aws s3 rm "s3://<<parameters.bucket-name>>" --recursive
   revert-migrations:
     description: Revert the last migration, if any were executed during the current workflow
     parameters:
@@ -157,7 +142,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-]
+          keys: [backend-build]
       - run:
           name: backend scan
           command: |
@@ -173,7 +158,7 @@ jobs:
       - checkout
       - install_aws_cli
       - run:
-          name: Ensure back-end infrastructure exists
+          name: Ensure front-end infrastructure exists
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
@@ -181,11 +166,11 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
-          name: Ensure front-end infrastructure exist
+          name: Ensure back-end infrastructure exist
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
+              --tags Project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
@@ -278,7 +263,6 @@ jobs:
             cd frontend
             npm run build
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-      - empty-s3
       - destroy-environment
       - revert-migrations
   deploy-backend:
@@ -317,7 +301,6 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - empty-s3
       - destroy-environment
       - revert-migrations
   smoke-test:
@@ -351,7 +334,6 @@ jobs:
             else
               exit 1
             fi
-      - empty-s3
       - destroy-environment
       - revert-migrations
   cloudfront-update:
@@ -376,7 +358,6 @@ jobs:
               --template-file .circleci/files/cloudfront.yml \
               --stack-name udapeople-cloudfront           \
               --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
-      - empty-s3
       - destroy-environment
       - revert-migrations
   cleanup:

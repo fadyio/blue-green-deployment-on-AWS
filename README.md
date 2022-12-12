@@ -32,9 +32,9 @@ ___
   | Appropriate job failure for infrastructure creation. | [SCREENSHOT05](Screenshots/SCREENSHOT05.png) | ✓ |
   | Appropriate job failure for the smoke test job. | [SCREENSHOT06](Screenshots/SCREENSHOT06.png) | ✓ |
   | Successful rollback after a failed smoke test. | [SCREENSHOT07](Screenshots/SCREENSHOT07.png) | ✓ |
-  | Successful promotion job. | [SCREENSHOT08](Screenshots/SCREENSHOT08.png) |  |
-  | Successful cleanup job. | [SCREENSHOT09](Screenshots/SCREENSHOT09.png) |  |
-  | Only deploy on pushed to `master` branch. | [SCREENSHOT10](Screenshots/SCREENSHOT10.png) |  |
+  | Successful promotion job. | [SCREENSHOT08](Screenshots/SCREENSHOT08.png) | ✓  |
+  | Successful cleanup job. | [SCREENSHOT09](Screenshots/SCREENSHOT09.png) | ✓  |
+  | Only deploy on pushed to `master` branch. | [SCREENSHOT10](Screenshots/SCREENSHOT10.png) | ✓  |
   | Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage.   | [node free memory](Screenshots/SCREENSHOT11_memory.png), [node CPU usage](Screenshots/SCREENSHOT11_cpu.png), [node disk usage](Screenshots/SCREENSHOT11_disk.png).</sup> |  |
   | Provide a screenshot of an alert that was sent by Prometheus. | [SCREENSHOT12](Screenshots/SCREENSHOT12.png) |  |
 
