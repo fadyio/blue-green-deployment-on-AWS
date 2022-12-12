@@ -166,42 +166,46 @@ jobs:
             npm audit fix --audit-level=critical --force
             npm audit fix --force
             npm audit --audit-level=critical
-  deploy-infrastructure:
+  deploy-frontend-infrastructure:
     docker:
-      - image: cimg/python:3.10
+      - image: cimg/aws:2022.09.1
     steps:
       - checkout
-      - install_aws_cli
+      - run:
+          name: Ensure front-end infrastructure exists
+          command: |
+            aws cloudformation deploy                                     \
+              --template-file .circleci/files/frontend.yml                \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"        \
+              --tags project=udapeople
+      - destroy-environments
+  deploy-backend-infrastructure:
+    docker:
+      - image: cimg/aws:2022.09.1
+    steps:
+      - checkout
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation deploy                                     \
+              --template-file .circleci/files/backend.yml                 \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"        \
+              --tags project=udapeople
       - run:
-          name: Ensure front-end infrastructure exist
+          name: Add back-end ip to Ansible inventory
           command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text)
-            echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
+            aws ec2 describe-instances                                            \
+              --query 'Reservations[*].Instances[*].PublicIpAddress'              \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}"  \
+              --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
-            - project/.circleci/ansible/inventory.txt
-      - destroy-environment
+            - .circleci/ansible/inventory.txt
+      - destroy-environments
   configure-infrastructure:
     docker:
       - image: cimg/python:3.10
@@ -414,7 +418,12 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - deploy-infrastructure:
+      - deploy-frontend-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      - deploy-backend-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
