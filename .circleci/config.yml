@@ -61,7 +61,7 @@ commands:
             #   then
                   # npm install
                   # npm run migrations:revert
-            npm -i
+            npm install
             npm run migrations:revert
               # fi
 jobs:
