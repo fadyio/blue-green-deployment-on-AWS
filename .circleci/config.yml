@@ -115,6 +115,7 @@ jobs:
       - image: cimg/node:13.8.0
     steps:
       - checkout
+      - revert-migrations
       - restore_cache:
           keys: [backend-build]
       - run:
@@ -123,7 +124,6 @@ jobs:
             cd backend
             npm install
             npm test
-      - revert-migrations
   scan-frontend:
     docker:
       - image: cimg/node:13.8.0
