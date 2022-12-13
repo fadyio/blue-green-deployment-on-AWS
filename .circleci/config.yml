@@ -62,10 +62,10 @@ commands:
             # if (( $SUCCESS == 1 ));
             # then
             #   npm install
-            #   npm run migration:revert
+            #   npm run migrations:revert
             # fi
               npm install
-              npm run migration:revert
+              npm run migrations:revert
 jobs:
   build-frontend:
     docker:
