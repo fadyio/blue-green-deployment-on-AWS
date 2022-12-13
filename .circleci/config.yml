@@ -55,15 +55,17 @@ commands:
           keys: [backend-build]
       - run:
           name: Revert migrations
-          when: on_fail
+          # when: on_fail
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
-            if (( $SUCCESS == 1 ));
-            then
+            # SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
+            # if (( $SUCCESS == 1 ));
+            # then
+            #   npm install
+            #   npm run migration:revert
+            # fi
               npm install
               npm run migration:revert
-            fi
 jobs:
   build-frontend:
     docker:
@@ -72,6 +74,7 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
+      - revert-migrations
       - run:
           name: Build front-end
           command: |
