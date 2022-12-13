@@ -59,10 +59,10 @@ commands:
             # SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<<parameters.Workflow_ID>>)
             #   if (( $SUCCESS == 1 ));
             #   then
-                  pwd
-                  npm install typescript -g
-                  npm install
-                  npm run migrations:revert
+                  # npm install
+                  # npm run migrations:revert
+            npm -i
+            npm run migrations:revert
               # fi
 jobs:
   build-frontend:
