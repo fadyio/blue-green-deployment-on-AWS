@@ -46,16 +46,16 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
   revert-migrations:
     description: Revert the last migration, if any were executed during the current workflow
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
+    # parameters:
+    #   Workflow_ID:
+    #     type: string
+    #     default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - restore_cache:
           keys: [backend-build]
       - run:
           name: Revert migrations
-          when: on_fail
+          # when: on_fail
           working_directory: ./backend
           command: |
             # SUCCESS=$(curl https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_${CIRCLE_WORKFLOW_ID:0:7}) \
@@ -81,26 +81,6 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-  revert-migrations:
-    description: Revert the last migration, if any were executed during the current workflow
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
-    steps:
-      - restore_cache:
-          keys: [backend-build]
-      - run:
-          name: Revert migrations
-          when: on_fail
-          working_directory: ./backend
-          command: |
-            # SUCCESS=$(curl https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_${CIRCLE_WORKFLOW_ID:0:7}) \
-            # [[ $SUCCESS == 1 ]] || (exit 0) \
-            # && (npm install;                \
-            #     npm run migrations:revert)
-            npm install
-            npm run imgrations:revert
   build-backend:
     docker:
       - image: cimg/node:13.8.0
@@ -143,6 +123,7 @@ jobs:
             cd backend
             npm install
             npm test
+      - revert-migrations
   scan-frontend:
     docker:
       - image: cimg/node:13.8.0
@@ -408,7 +389,6 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - revert-migrations
       - test-frontend:
           requires: [build-frontend]
       - test-backend:
