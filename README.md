@@ -17,10 +17,10 @@ ___
   | Specifications | Proof | Meets specifications |
   |---|---|---|
   | Public Url to GitHub repository (not private) | [URL01](https://github.com/fadyio/Advanced-Cloud-DevOps-project-3) | ✓ |
-  | Public URL for your S3 Bucket (aka, your green candidate front-end) | [URL02]() |  |
-  | Public URL for your CloudFront distribution (aka, your blue production front-end) | [URL03]() |  |
-  | Public URLs to deployed application back-end in EC2 | [URL04]() |  |
-  | Public URL to your Prometheus Server | [URL05]() |  |
+  | Public URL for your S3 Bucket (aka, your green candidate front-end) | [URL02](http://udapeople-8d75cb8.s3-website-us-east-1.amazonaws.com) | ✓  |
+  | Public URL for your CloudFront distribution (aka, your blue production front-end) | [URL03](http://d3o8lowdaf9vvh.cloudfront.net) | ✓  |
+  | Public URLs to deployed application back-end in EC2 | [URL04](http://ec2-3-212-62-92.compute-1.amazonaws.com) | ✓  |
+  | Public URL to your Prometheus Server | [URL05](http://ec2-44-212-31-43.compute-1.amazonaws.com) | ✓  |
 
 - Your screenshots in JPG or PNG format, named using the screenshot number listed in the instructions.
   | Specifications | Proof | Meets specification |

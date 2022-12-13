@@ -1,5 +1,5 @@
 URL01:https://github.com/fadyio/Advanced-Cloud-DevOps-project-3
-URL02:
-URL03:
-URL04:
-URL05:
+URL02:http://udapeople-8d75cb8.s3-website-us-east-1.amazonaws.com
+URL03:http://d3o8lowdaf9vvh.cloudfront.net
+URL04:http://ec2-3-212-62-92.compute-1.amazonaws.com
+URL05:http://ec2-44-212-31-43.compute-1.amazonaws.com
