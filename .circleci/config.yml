@@ -60,6 +60,7 @@ commands:
             #   if (( $SUCCESS == 1 ));
             #   then
                   pwd
+                  npm install typescript -g
                   npm install
                   npm run migrations:revert
               # fi
