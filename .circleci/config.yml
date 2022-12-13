@@ -60,7 +60,7 @@ commands:
             #   if (( $SUCCESS == 1 ));
             #   then
                   pwd
-                  ls -la
+                  npm install
                   npm run migrations:revert
               # fi
 jobs:
