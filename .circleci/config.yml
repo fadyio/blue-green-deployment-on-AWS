@@ -63,7 +63,7 @@ commands:
             # && (npm install;                \
             #     npm run migrations:revert)
             npm install
-            npm run imgrations:revert
+            npm run migrations:revert
 jobs:
   build-frontend:
     docker:
