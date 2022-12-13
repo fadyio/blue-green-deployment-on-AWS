@@ -55,13 +55,10 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
-            if (( $SUCCESS == 1 ));
-            then
-              cd ~/project/backend
-              npm install
-              npm run migrations:revert
-            fi
+            SUCCESS=$(curl https://kvdb.io/NPPcKsj7e3J8hk5ZQrdB6C/migration_${CIRCLE_WORKFLOW_ID:0:7}) \
+            [[ $SUCCESS == 1 ]] || (exit 0) \
+            && (npm install;                \
+                npm run migrations:revert)
 jobs:
   build-frontend:
     docker:
@@ -220,8 +217,8 @@ jobs:
           command: |
             cd backend
             npm install
-            npm run migrations > migrations_dump.txt
-            cat migrations_dump.txt
+            npm run migrations || tee migrations_dump.txt || \
+            (cat /home/circleci/.npm/_logs/*.log && exit 3)
       - run:
           name: Send migration status to kvdb.io
           command: |
