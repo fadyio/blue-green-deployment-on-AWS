@@ -151,8 +151,8 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit fix --audit-level=critical --force
+            npm audit fix --force --production
             npm audit --audit-level=critical
-            npm audit fix --audit-level=critical --force
   deploy-infrastructure:
     docker:
       - image: cimg/python:3.10
